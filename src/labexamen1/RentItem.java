@@ -50,6 +50,9 @@ public abstract class RentItem {
     public ImageIcon getImagen() {
         return imagen;
     }
+    public void setImagen(ImageIcon img){
+        this.imagen =img;
+    }
     
     
 }

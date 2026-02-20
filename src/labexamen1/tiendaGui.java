@@ -7,7 +7,11 @@ package labexamen1;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import javax.swing.filechooser.FileNameExtensionFilter;
 public class tiendaGui extends JFrame {
+    //ArrayList
+    ArrayList<RentItem> items= new ArrayList<>();
+    //Colores
     Color bgr= new Color(0xA5C89E);
     Color txt= new Color(0x30364F);
     Color btn= new Color(0xD8E983);
@@ -27,6 +31,8 @@ public class tiendaGui extends JFrame {
         this.setResizable(false);
         this.getContentPane().setBackground(bgr);
         this.setLocationRelativeTo(null);
+        Movie m= new Movie("1","1",1);
+        items.add(m);
         //Labels
         titulo.setForeground(txt);
         titulo.setBounds(280,160,500,30);
@@ -52,13 +58,64 @@ public class tiendaGui extends JFrame {
         btnAddItem.addActionListener(e->{
             String[] options={"Movie","Game","Cancelar"};
             String nombre;
+            String codigo;
+            double precio;
             int eleccion=JOptionPane.showOptionDialog(this, "Que deseas Agregar", "Add Item", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null,options, options[0]);
             switch (eleccion){
                 case 0:
-                    nombre=JOptionPane.showInputDialog("Ingrese el nombre de la MOVIE");
-                    break;
+                    codigo=JOptionPane.showInputDialog("Ingrese el Codigo Unico de la MOVIE");
+                    if(noExisteItem(codigo)){
+                        nombre=JOptionPane.showInputDialog("Ingrese el nombre de la MOVIE");
+                        precio= Double.parseDouble(JOptionPane.showInputDialog("Ingrese el precio de la MOVIE"));
+                        ImageIcon imagen = null;
+                        JFileChooser elegirImagen = new JFileChooser();
+                        elegirImagen.setDialogTitle("Eliga una imagen para la MOVIE");
+                        elegirImagen.setFileFilter( new FileNameExtensionFilter("png","jpg","jpeg"));
+                        
+                        int resultado = elegirImagen.showOpenDialog(this);
+                        if(resultado==JFileChooser.APPROVE_OPTION){
+                            String ruta= elegirImagen.getSelectedFile().getPath();
+                            Image img= new ImageIcon(ruta).getImage().getScaledInstance(150,200, Image.SCALE_SMOOTH);
+                            imagen= new ImageIcon(img);
+                        }
+                        Movie nuevaMovie= new Movie(codigo,nombre,precio);
+                        if(imagen!=null)
+                        nuevaMovie.setImagen(imagen);
+                        items.add(nuevaMovie);
+                        JOptionPane.showMessageDialog(this, "MOVIE agregada correctamente");
+                        
+    
+                        break;
+                    }else{
+                        JOptionPane.showMessageDialog(this, "El codgio ya esta en uso");
+                        break;
+                    }
+                    
                 case 1:
-                    nombre=JOptionPane.showInputDialog("Ingrese el nombre de el GAME");
+                    codigo=JOptionPane.showInputDialog("Ingrese el Codigo Unico del GAME");
+                    if(noExisteItem(codigo)){
+                        nombre=JOptionPane.showInputDialog("Ingrese el nombre de el GAME");
+                        ImageIcon imagen = null;
+                        JFileChooser elegirImagen = new JFileChooser();
+                        elegirImagen.setDialogTitle("Eliga una imagen para el Game");
+                        elegirImagen.setFileFilter( new FileNameExtensionFilter("png","jpg","jpeg"));
+                        
+                        int resultado = elegirImagen.showOpenDialog(this);
+                        if(resultado==JFileChooser.APPROVE_OPTION){
+                            String ruta= elegirImagen.getSelectedFile().getPath();
+                            Image img= new ImageIcon(ruta).getImage().getScaledInstance(150,200, Image.SCALE_SMOOTH);
+                            imagen= new ImageIcon(img);
+                        }
+                        Game nuevoGame= new Game(codigo,nombre);
+                        if(imagen!=null)
+                        nuevoGame.setImagen(imagen);
+                        items.add(nuevoGame);
+                        JOptionPane.showMessageDialog(this, "Game agregado correctamente");
+                    }else{
+                        JOptionPane.showMessageDialog(this, "El codgio ya esta en uso");
+                    }
+                    
+                    
             }
         });
         //rentar
@@ -90,6 +147,13 @@ public class tiendaGui extends JFrame {
         btnRentar.setVisible(t);
         btnSubMenu.setVisible(t);
         btnPrint.setVisible(t);
+    }
+    boolean noExisteItem(String codigo){
+        for(RentItem item:items){
+            if(item.getCodigoUnico().equals(codigo))
+                return false;
+        }
+        return true;
     }
     
     
