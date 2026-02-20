@@ -70,10 +70,7 @@ public class Game extends RentItem implements MenuActions{
         return fechaPublicacion; 
     }
     
-    @Override 
-    public ImageIcon getImagen(){ 
-        return imagen; 
-    }
+    
 
  
 
