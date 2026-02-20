@@ -52,12 +52,20 @@ public class Movie extends RentItem {
     
     
     
-     
+     @Override
     public double pagoRenta(int dias){
-        int precioRenta = 0;
-        
-        
+        double precioRenta = getPrecioRenta() * dias;
+        if ("ESTRENO".equals(getEstado())) {
+            if (dias > 2) {
+                precioRenta += 50.0 * (dias - 2);
+            }
+        } else { 
+            if (dias > 5) {
+                precioRenta += 30.0 * (dias - 5);
+            }
+        }
         return precioRenta;
+        
     }
     
     
