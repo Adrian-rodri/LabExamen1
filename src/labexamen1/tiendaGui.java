@@ -85,10 +85,17 @@ public class tiendaGui extends JFrame {
             switch (eleccion){
                 case 0:
                     codigo=JOptionPane.showInputDialog("Ingrese el Codigo Unico de la MOVIE");
+                    if(codigo.isEmpty()|| codigo==null)
+                        return;
                     if(noExisteItem(codigo)){
                         nombre=JOptionPane.showInputDialog("Ingrese el nombre de la MOVIE");
+                        if(nombre.isEmpty()){
+                            JOptionPane.showMessageDialog(this, "El nombre no puede estar vacio");
+                            return;
+                        }
                         precio= Double.parseDouble(JOptionPane.showInputDialog("Ingrese el precio de la MOVIE"));
-                        ImageIcon imagen = null;
+                        
+                        ImageIcon imagen =null;
                         JFileChooser elegirImagen = new JFileChooser();
                         elegirImagen.setDialogTitle("Eliga una imagen para la MOVIE");
                         elegirImagen.setFileFilter( new FileNameExtensionFilter("Imágenes (jpg, png)","png","jpg","jpeg"));
@@ -114,10 +121,16 @@ public class tiendaGui extends JFrame {
                     
                 case 1:
                     codigo=JOptionPane.showInputDialog("Ingrese el Codigo Unico del GAME");
+                    if(codigo.isEmpty()|| codigo==null)
+                        return;
                     if(noExisteItem(codigo)){
                         nombre=JOptionPane.showInputDialog("Ingrese el nombre de el GAME");
-                        ImageIcon imagen = null;
-                        JFileChooser elegirImagen = new JFileChooser();
+                        if(nombre.isEmpty()){
+                            JOptionPane.showMessageDialog(this, "El nombre no puede estar vacio");
+                            return;
+                        }
+                        ImageIcon imagen= null;
+                        JFileChooser elegirImagen =new JFileChooser();
                         elegirImagen.setDialogTitle("Eliga una imagen para el Game");
                         elegirImagen.setFileFilter( new FileNameExtensionFilter("Imágenes (jpg, png)","png","jpg","jpeg"));
                         
@@ -143,6 +156,45 @@ public class tiendaGui extends JFrame {
         });
         //rentar
         btnRentar.addActionListener(e->{
+            String codigo = JOptionPane.showInputDialog(this, "Ingrese el código del ítem a rentar:");
+            if (codigo== null) 
+                return;
+            RentItem itemEncontrado = null;
+            
+            for (RentItem item : items) {
+                if (item.getCodigoUnico().equals(codigo)) {
+                    itemEncontrado=item;
+                    break;
+                }
+            }
+            if (itemEncontrado== null) {
+                JOptionPane.showMessageDialog(this, "Item No Existe");
+                return;
+            }
+            JPanel panelInfo =new JPanel();
+            panelInfo.setLayout(new BoxLayout(panelInfo, BoxLayout.Y_AXIS));
+
+            if (itemEncontrado.getImagen()!= null) {
+                panelInfo.add(new JLabel(itemEncontrado.getImagen()));
+            }
+            panelInfo.add(new JLabel("Código:" +itemEncontrado.getCodigoUnico()));
+            panelInfo.add(new JLabel("Nombre: "+itemEncontrado.getNombreItem()));
+            panelInfo.add(new JLabel("Precio base: Lps." +itemEncontrado.getPrecioRenta()));
+
+            if (itemEncontrado instanceof Movie) {
+                panelInfo.add(new JLabel("Estado: " +((Movie) itemEncontrado).getEstado()));
+            }
+            
+            JOptionPane.showMessageDialog(this, panelInfo);
+            String txtDias = JOptionPane.showInputDialog(this, "¿Cuántos días desea rentar?");
+            if (txtDias == null|| txtDias.isEmpty()) 
+                return;
+            else if(txtDias.matches("\\d+")){
+                int dias = Integer.parseInt(txtDias);
+                double total = itemEncontrado.pagoRenta(dias);
+                JOptionPane.showMessageDialog(this, "Total a pagar: " + total + " Lps por " + dias + " días");
+            }else
+                JOptionPane.showMessageDialog(this, "Ingrese un número válido");
         
         
             
