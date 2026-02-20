@@ -19,7 +19,8 @@ public class Game extends  RentItem {
         this.imagen = imagen; 
         
    }
-    public double getPrecioRenta(){
+   
+    public double getPrecioRenta(int dias){
         return 20.0; 
     }
     public void setFechaPublicacion(int year, int mes, int dia){
@@ -29,6 +30,12 @@ public class Game extends  RentItem {
     public ArrayList<String> listEspecificaciones(){
         return especificaciones; 
     }
-   
+
+    @Override
+    public double pagoRenta(int dias) {
+        return 0; 
+    }
+
+    
     
 }
