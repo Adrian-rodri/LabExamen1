@@ -130,6 +130,22 @@ public class Game extends RentItem implements MenuActions{
 
     @Override
     public void submenu() {
-       
+       Scanner sc = new Scanner(System.in);
+    int opcion = -1;
+
+    do {
+        mostrarMenu(); // muestra las opciones
+        System.out.print("Ingrese una opción: ");
+
+        // Validar que sea un número
+        if (sc.hasNextInt()) {
+            opcion = sc.nextInt();
+            ejecutarOpcion(opcion); // responde según la opción
+        } else {
+            System.out.println("Por favor ingrese un número válido.");
+            sc.next(); // limpiar el token inválido
+        }
+
+    } while (opcion != 0);
     }
 }
