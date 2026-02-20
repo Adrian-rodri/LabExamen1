@@ -70,13 +70,13 @@ public class tiendaGui extends JFrame {
                         ImageIcon imagen = null;
                         JFileChooser elegirImagen = new JFileChooser();
                         elegirImagen.setDialogTitle("Eliga una imagen para la MOVIE");
-                        elegirImagen.setFileFilter( new FileNameExtensionFilter("png","jpg","jpeg"));
+                        elegirImagen.setFileFilter( new FileNameExtensionFilter("Imágenes (jpg, png)","png","jpg","jpeg"));
                         
-                        int resultado = elegirImagen.showOpenDialog(this);
-                        if(resultado==JFileChooser.APPROVE_OPTION){
-                            String ruta= elegirImagen.getSelectedFile().getPath();
-                            Image img= new ImageIcon(ruta).getImage().getScaledInstance(150,200, Image.SCALE_SMOOTH);
-                            imagen= new ImageIcon(img);
+                        int resultado= elegirImagen.showOpenDialog(this);
+                        if (resultado== JFileChooser.APPROVE_OPTION) {
+                            String ruta= elegirImagen.getSelectedFile().getAbsolutePath();
+                            Image img = new ImageIcon(ruta).getImage().getScaledInstance(150, 200, Image.SCALE_SMOOTH);
+                            imagen = new ImageIcon(img);
                         }
                         Movie nuevaMovie= new Movie(codigo,nombre,precio);
                         if(imagen!=null)
@@ -98,11 +98,11 @@ public class tiendaGui extends JFrame {
                         ImageIcon imagen = null;
                         JFileChooser elegirImagen = new JFileChooser();
                         elegirImagen.setDialogTitle("Eliga una imagen para el Game");
-                        elegirImagen.setFileFilter( new FileNameExtensionFilter("png","jpg","jpeg"));
+                        elegirImagen.setFileFilter( new FileNameExtensionFilter("Imágenes (jpg, png)","png","jpg","jpeg"));
                         
                         int resultado = elegirImagen.showOpenDialog(this);
                         if(resultado==JFileChooser.APPROVE_OPTION){
-                            String ruta= elegirImagen.getSelectedFile().getPath();
+                            String ruta= elegirImagen.getSelectedFile().getAbsolutePath();
                             Image img= new ImageIcon(ruta).getImage().getScaledInstance(150,200, Image.SCALE_SMOOTH);
                             imagen= new ImageIcon(img);
                         }
@@ -111,8 +111,10 @@ public class tiendaGui extends JFrame {
                         nuevoGame.setImagen(imagen);
                         items.add(nuevoGame);
                         JOptionPane.showMessageDialog(this, "Game agregado correctamente");
+                        break;
                     }else{
                         JOptionPane.showMessageDialog(this, "El codgio ya esta en uso");
+                        break;
                     }
                     
                     
@@ -122,16 +124,181 @@ public class tiendaGui extends JFrame {
         btnRentar.addActionListener(e->{
         
         
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
         });
         //submenu
         btnSubMenu.addActionListener(e->{
         
         
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
         });
         //print
         btnPrint.addActionListener(e->{
+            JDialog dialog = new JDialog(this, "Todos los Items", true);
+    dialog.setSize(800, 600);
+    dialog.setLocationRelativeTo(this);
+
+    // Panel con scroll
+    JPanel panelItems = new JPanel();
+    panelItems.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
+    panelItems.setBackground(bgr);
+
+    for (RentItem item : items) {
+        // Tarjeta por item
+        JPanel tarjeta = new JPanel();
+        tarjeta.setLayout(new BoxLayout(tarjeta, BoxLayout.Y_AXIS));
+        tarjeta.setBackground(btn);
+        tarjeta.setBorder(BorderFactory.createLineBorder(txt, 2));
+        tarjeta.setPreferredSize(new Dimension(160, 280));
+
+        // Imagen
+        JLabel lblImg = new JLabel();
+        lblImg.setAlignmentX(Component.CENTER_ALIGNMENT);
+        if (item.getImagen() != null) {
+            lblImg.setIcon(item.getImagen());
+        } else {
+            lblImg.setText("Sin imagen");
+        }
+
+        // Nombre
+        JLabel lblNombre = new JLabel(item.getNombreItem());
+        lblNombre.setAlignmentX(Component.CENTER_ALIGNMENT);
+        lblNombre.setForeground(txt);
+        lblNombre.setFont(new Font("Calibri", Font.BOLD, 13));
+
+        // Precio
+        JLabel lblPrecio = new JLabel("Precio: " + item.getPrecioRenta() + " Lps");
+        lblPrecio.setAlignmentX(Component.CENTER_ALIGNMENT);
+        lblPrecio.setForeground(txt);
+
+        // Estado (solo si es Movie)
+        if (item instanceof Movie) {
+            Movie ma = (Movie) item;
+            JLabel lblEstado = new JLabel("Estado: " + ma.getEstado());
+            lblEstado.setAlignmentX(Component.CENTER_ALIGNMENT);
+            lblEstado.setForeground(txt);
+            tarjeta.add(Box.createVerticalStrut(5));
+            tarjeta.add(lblEstado);
+        }
+
+        // Tipo
+        JLabel lblTipo = new JLabel(item instanceof Movie ? "🎬 Movie" : "🎮 Game");
+        lblTipo.setAlignmentX(Component.CENTER_ALIGNMENT);
+        lblTipo.setForeground(txt);
+
+        tarjeta.add(Box.createVerticalStrut(5));
+        tarjeta.add(lblImg);
+        tarjeta.add(Box.createVerticalStrut(5));
+        tarjeta.add(lblNombre);
+        tarjeta.add(Box.createVerticalStrut(3));
+        tarjeta.add(lblPrecio);
+        tarjeta.add(Box.createVerticalStrut(3));
+        tarjeta.add(lblTipo);
+
+        panelItems.add(tarjeta);
+    }
+
+    // Si no hay items
+    if (items.isEmpty()) {
+        JLabel vacio = new JLabel("No hay items registrados");
+        vacio.setForeground(txt);
+        panelItems.add(vacio);
+    }
+
+    JScrollPane scroll = new JScrollPane(panelItems);
+    dialog.add(scroll);
+    dialog.setVisible(true);
         
         
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
         });
         //add
         add(titulo);
