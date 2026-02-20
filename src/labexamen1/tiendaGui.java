@@ -22,8 +22,12 @@ public class tiendaGui extends JFrame {
     JButton btnRentar= new JButton("Rentar");
     JButton btnSubMenu= new JButton("Ejecutar Submenu");
     JButton btnPrint= new JButton("Imprimir Todo");
+    JButton btnBack= new JButton("Regresar");
     //labels
     JLabel titulo= new JLabel("Tienda Multimedia"); 
+    //
+    JPanel panelItems= new JPanel();
+    JScrollPane scroll = new JScrollPane(panelItems);
     tiendaGui(){
         this.setSize(800,800);
         this.setLayout(null);
@@ -53,7 +57,24 @@ public class tiendaGui extends JFrame {
         btnPrint.setBackground(btn);
         btnPrint.setBounds(300,320,200,30);
         btnPrint.setForeground(txt);
+        //
+        btnBack.setBackground(btn);
+        btnBack.setForeground(txt);
+        btnBack.setVisible(false);
+        //
+        scroll.setBounds(0, 40, 800, 760);
+        scroll.setVisible(false);
+        add(scroll);
         //Actions
+        //Boton regresar
+        btnBack.addActionListener(e->{
+            mostrarMenu(true);
+            btnBack.setVisible(false);
+       
+            panelItems.setVisible(false);
+            scroll.setVisible(false);
+        
+        });
         //Add item
         btnAddItem.addActionListener(e->{
             String[] options={"Movie","Game","Cancelar"};
@@ -184,65 +205,61 @@ public class tiendaGui extends JFrame {
         });
         //print
         btnPrint.addActionListener(e->{
-            JDialog dialog = new JDialog(this, "Todos los Items", true);
-    dialog.setSize(800, 600);
-    dialog.setLocationRelativeTo(this);
-
-    // Panel con scroll
-    JPanel panelItems = new JPanel();
+            mostrarMenu(false);
+            btnBack.setVisible(true);
+            btnBack.setBounds(0,0,100,30);
+    //panel scroll
+    panelItems.setVisible(true);
+    panelItems.removeAll();
     panelItems.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
     panelItems.setBackground(bgr);
+    panelItems.repaint();
 
     for (RentItem item : items) {
-        // Tarjeta por item
-        JPanel tarjeta = new JPanel();
+        //Tarjeta por item
+        JPanel tarjeta=new JPanel();
         tarjeta.setLayout(new BoxLayout(tarjeta, BoxLayout.Y_AXIS));
         tarjeta.setBackground(btn);
         tarjeta.setBorder(BorderFactory.createLineBorder(txt, 2));
         tarjeta.setPreferredSize(new Dimension(160, 280));
 
-        // Imagen
-        JLabel lblImg = new JLabel();
+        //Imagen
+        JLabel lblImg =new JLabel();
         lblImg.setAlignmentX(Component.CENTER_ALIGNMENT);
-        if (item.getImagen() != null) {
+        if (item.getImagen()!=null) {
             lblImg.setIcon(item.getImagen());
         } else {
             lblImg.setText("Sin imagen");
         }
 
-        // Nombre
-        JLabel lblNombre = new JLabel(item.getNombreItem());
+        //Nombre
+        JLabel lblNombre=new JLabel(item.getNombreItem());
         lblNombre.setAlignmentX(Component.CENTER_ALIGNMENT);
         lblNombre.setForeground(txt);
         lblNombre.setFont(new Font("Calibri", Font.BOLD, 13));
 
-        // Precio
-        JLabel lblPrecio = new JLabel("Precio: " + item.getPrecioRenta() + " Lps");
+        //Precio
+        JLabel lblPrecio=new JLabel("Precio: " + item.getPrecioRenta() + " Lps");
         lblPrecio.setAlignmentX(Component.CENTER_ALIGNMENT);
         lblPrecio.setForeground(txt);
 
-        // Estado (solo si es Movie)
+        //estreno o no
         if (item instanceof Movie) {
-            Movie ma = (Movie) item;
-            JLabel lblEstado = new JLabel("Estado: " + ma.getEstado());
+            Movie mo = (Movie) item;
+            JLabel lblEstado=new JLabel("Estado: "+ mo.getEstado());
             lblEstado.setAlignmentX(Component.CENTER_ALIGNMENT);
             lblEstado.setForeground(txt);
-            tarjeta.add(Box.createVerticalStrut(5));
             tarjeta.add(lblEstado);
         }
 
-        // Tipo
-        JLabel lblTipo = new JLabel(item instanceof Movie ? "🎬 Movie" : "🎮 Game");
+        //Tipo
+        JLabel lblTipo=new JLabel(item instanceof Movie ? "Movie" : "Game");
         lblTipo.setAlignmentX(Component.CENTER_ALIGNMENT);
         lblTipo.setForeground(txt);
-
-        tarjeta.add(Box.createVerticalStrut(5));
+        
         tarjeta.add(lblImg);
-        tarjeta.add(Box.createVerticalStrut(5));
         tarjeta.add(lblNombre);
-        tarjeta.add(Box.createVerticalStrut(3));
         tarjeta.add(lblPrecio);
-        tarjeta.add(Box.createVerticalStrut(3));
         tarjeta.add(lblTipo);
 
         panelItems.add(tarjeta);
@@ -254,53 +271,14 @@ public class tiendaGui extends JFrame {
         vacio.setForeground(txt);
         panelItems.add(vacio);
     }
-
-    JScrollPane scroll = new JScrollPane(panelItems);
-    dialog.add(scroll);
-    dialog.setVisible(true);
-        
-        
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
+    scroll.setViewportView(panelItems);
+    scroll.setVisible(true);
+    panelItems.repaint();
+    scroll.repaint();
+    this.setVisible(true);    
         });
         //add
+        add(btnBack);
         add(titulo);
         add(btnAddItem);
         add(btnRentar);
