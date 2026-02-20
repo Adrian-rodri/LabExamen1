@@ -134,16 +134,16 @@ public class Game extends RentItem implements MenuActions{
     int opcion = -1;
 
     do {
-        mostrarMenu(); // muestra las opciones
+        mostrarMenu(); 
         System.out.print("Ingrese una opción: ");
 
-        // Validar que sea un número
+        
         if (sc.hasNextInt()) {
             opcion = sc.nextInt();
-            ejecutarOpcion(opcion); // responde según la opción
+            ejecutarOpcion(opcion); 
         } else {
             System.out.println("Por favor ingrese un número válido.");
-            sc.next(); // limpiar el token inválido
+            sc.next(); 
         }
 
     } while (opcion != 0);
