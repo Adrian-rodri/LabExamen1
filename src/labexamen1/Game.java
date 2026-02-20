@@ -1,9 +1,10 @@
 package labexamen1;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Scanner;
-import javax.swing.ImageIcon;
+import javax.swing.*;
 
 public class Game extends RentItem implements MenuActions{
 
@@ -56,9 +57,9 @@ public class Game extends RentItem implements MenuActions{
   
     @Override
     public String toString() {
-        int day  = fechaPublicacion.get(Calendar.DAY_OF_MONTH);
-        int mes  = fechaPublicacion.get(Calendar.MONTH) + 1;
-        int year = fechaPublicacion.get(Calendar.YEAR);
+        int day= fechaPublicacion.get(Calendar.DAY_OF_MONTH);
+        int mes= fechaPublicacion.get(Calendar.MONTH) + 1;
+        int year= fechaPublicacion.get(Calendar.YEAR);
 
         return super.toString()
              + "  Fecha publicación: " + day + "/" + mes + "/" + year
@@ -84,26 +85,26 @@ public class Game extends RentItem implements MenuActions{
 
     @Override
     public void ejecutarOpcion(int opcion) {
-        Scanner sc = new Scanner(System.in);
+        Scanner entrada = new Scanner(System.in);
 
         switch (opcion) {
             case 1:
                 System.out.print("Año: "); 
-                int y = sc.nextInt();
+                int y=entrada.nextInt();
                 System.out.print("Mes: ");  
-                int m = sc.nextInt();
+                int m= entrada.nextInt();
                 System.out.print("Día: ");  
-                int d = sc.nextInt();
+                int d= entrada.nextInt();
                 setFechaPublicacion(y, m, d);
                 System.out.println("Fecha actualizada.");
                 break;
 
             case 2:
-                System.out.print("Especificación: ");
-                sc.nextLine(); // limpiar buffer
-                String spec = sc.nextLine();
+                System.out.print("Especificacion: ");
+                entrada.nextLine();
+                String spec = entrada.nextLine();
                 agregarEspecificacion(spec);
-                System.out.println(" Especificación agregada.");
+                System.out.println(" Especificacion agregada.");
                 break;
 
             case 3:
@@ -120,7 +121,7 @@ public class Game extends RentItem implements MenuActions{
                 break;
 
             default:
-                System.out.println("Opción no válida.");
+                System.out.println("Opcion no válida.");
         }
     }
 
@@ -131,17 +132,50 @@ public class Game extends RentItem implements MenuActions{
 
     do {
         mostrarMenu(); 
-        System.out.print("Ingrese una opción: ");
+        System.out.print("Ingrese una opcion: ");
 
         
         if (sc.hasNextInt()) {
             opcion = sc.nextInt();
             ejecutarOpcion(opcion); 
         } else {
-            System.out.println("Por favor ingrese un número válido.");
+            System.out.println("Por favor ingrese un número valido.");
             sc.next(); 
         }
 
     } while (opcion != 0);
     }
+    public void ejecutarOpcionGUI(int opcion, Component parent) {
+    switch (opcion) {
+        case 1:
+            try {
+                int y=Integer.parseInt(JOptionPane.showInputDialog(parent, "Año:"));
+                int m=Integer.parseInt(JOptionPane.showInputDialog(parent, "Mes:"));
+                int d= Integer.parseInt(JOptionPane.showInputDialog(parent, "Día:"));
+                setFechaPublicacion(y, m, d);
+                JOptionPane.showMessageDialog(parent, "Fecha actualizada.");
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(parent, "Valor invalido");
+            }
+            break;
+        case 2:
+            String spec=JOptionPane.showInputDialog(parent, "Ingrese la especificacion:");
+            if (spec!=null && !spec.isEmpty()) {
+                agregarEspecificacion(spec);
+                JOptionPane.showMessageDialog(parent, "Especificacion agregada.");
+            }
+            break;
+        case 3:
+            if (especificaciones.isEmpty()) {
+                JOptionPane.showMessageDialog(parent, "No hay especificaciones.");
+            } else {
+                StringBuilder sb=new StringBuilder();
+                for (int i = 0; i < especificaciones.size(); i++) {
+                    sb.append((i+1) + ". " + especificaciones.get(i) + "\n");
+                }
+                JOptionPane.showMessageDialog(parent, sb.toString(), "Especificaciones", JOptionPane.PLAIN_MESSAGE);
+            }
+            break;
+    }
+}
 }

@@ -7,7 +7,7 @@ package labexamen1;
  */
 public class LabExamen1 {
     public static void main(String[] args) {
-        new tiendaGui();
+        tiendaGui menu=new tiendaGui();
        
     }
     

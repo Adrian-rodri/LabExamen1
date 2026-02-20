@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.util.Calendar;
 public class tiendaGui extends JFrame {
     //ArrayList
     ArrayList<RentItem> items= new ArrayList<>();
@@ -35,7 +36,7 @@ public class tiendaGui extends JFrame {
         this.setResizable(false);
         this.getContentPane().setBackground(bgr);
         this.setLocationRelativeTo(null);
-        Movie m= new Movie("1","1",1);
+        Movie m= new Movie("M-001","Toy Story",145);
         items.add(m);
         //Labels
         titulo.setForeground(txt);
@@ -194,164 +195,160 @@ public class tiendaGui extends JFrame {
                 double total = itemEncontrado.pagoRenta(dias);
                 JOptionPane.showMessageDialog(this, "Total a pagar: " + total + " Lps por " + dias + " días");
             }else
-                JOptionPane.showMessageDialog(this, "Ingrese un número válido");
-        
-        
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
+                JOptionPane.showMessageDialog(this, "Ingrese un número válido");    
         });
+        
         //submenu
-        btnSubMenu.addActionListener(e->{
-        
-        
+        btnSubMenu.addActionListener(e -> {
+            String codigo=JOptionPane.showInputDialog(this, "Ingrese el código del ítem:");
+            if (codigo ==null) 
+                return;
+            RentItem itemEncontrado= null;
+            for (RentItem item :items) {
+                if (item.getCodigoUnico().equals(codigo)) {
+                    itemEncontrado=item;
+                    break;
+                }
+            }
+
+            if (itemEncontrado==null) {
+                JOptionPane.showMessageDialog(this, "Item No Existe");
+                return;
+            }
             
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
+        if (itemEncontrado instanceof Movie) {
+            Movie mo=(Movie)itemEncontrado;
+            String[] opcionesMovie={"Cambiar fecha de estreno", "Cancelar"};
+            int opcion=JOptionPane.showOptionDialog(this, "Submenu: " + mo.getNombreItem(),"Submenu Movie", JOptionPane.DEFAULT_OPTION,JOptionPane.PLAIN_MESSAGE, null, opcionesMovie, opcionesMovie[0]);
+
+            if (opcion==0) {
+                String txtYear=JOptionPane.showInputDialog("Ingrese el año (YYYY):");
+                String txtMes=JOptionPane.showInputDialog("Ingrese el mes (1-12):");
+                String txtDias= JOptionPane.showInputDialog("Ingrese el día (1-31):");
+
+                if (txtYear!=null && txtMes!=null && txtDias!=null && txtYear.matches("\\d+") && txtMes.matches("\\d+") && txtDias.matches("\\d+")) {
+                    int year= Integer.parseInt(txtYear);
+                    int mes= Integer.parseInt(txtMes);
+                    int dia=Integer.parseInt(txtDias);
+
+                    Calendar fecha=Calendar.getInstance();
+                    fecha.set(year, mes - 1, dia);
+
+                    mo.setFechaEstreno(fecha);
+                    JOptionPane.showMessageDialog(this, "Fecha actualizada. Estado: " + mo.getEstado());
+                } else 
+                    JOptionPane.showMessageDialog(this, "Operacion cancelada o datos no validos.");
+            }
+
+            } else if (itemEncontrado instanceof MenuActions) {
+                Game g=(Game) itemEncontrado;
+                String[] opcionesGame= { "Actualizar fecha de publicacion", "Agregar especificacion", "Ver especificaciones", "Cancelar"};
+
+                int op=JOptionPane.showOptionDialog(this, "Submenu: " + g.getNombreItem(), "Submenú Game", JOptionPane.DEFAULT_OPTION, 
+                        JOptionPane.PLAIN_MESSAGE, null, opcionesGame, opcionesGame[0]);
+
+                if (op>=0 && op<3) {
+                    g.ejecutarOpcionGUI(op + 1, this);
+                }
+            }
         });
         //print
         btnPrint.addActionListener(e->{
             mostrarMenu(false);
             btnBack.setVisible(true);
             btnBack.setBounds(0,0,100,30);
-    //panel scroll
-    panelItems.setVisible(true);
-    panelItems.removeAll();
-    panelItems.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
-    panelItems.setBackground(bgr);
-    panelItems.repaint();
+        //panel scroll
+        panelItems.setVisible(true);
+        panelItems.removeAll();
+        panelItems.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        panelItems.setBackground(bgr);
+        panelItems.repaint();
 
-    for (RentItem item : items) {
-        //Tarjeta por item
-        JPanel tarjeta=new JPanel();
-        tarjeta.setLayout(new BoxLayout(tarjeta, BoxLayout.Y_AXIS));
-        tarjeta.setBackground(btn);
-        tarjeta.setBorder(BorderFactory.createLineBorder(txt, 2));
-        tarjeta.setPreferredSize(new Dimension(160, 280));
+        for (RentItem item : items) {
+            //Tarjeta por item
+            JPanel tarjeta=new JPanel();
+            tarjeta.setLayout(new BoxLayout(tarjeta, BoxLayout.Y_AXIS));
+            tarjeta.setBackground(btn);
+            tarjeta.setBorder(BorderFactory.createLineBorder(txt, 2));
+            tarjeta.setPreferredSize(new Dimension(160, 280));
 
-        //Imagen
-        JLabel lblImg =new JLabel();
-        lblImg.setAlignmentX(Component.CENTER_ALIGNMENT);
-        if (item.getImagen()!=null) {
-            lblImg.setIcon(item.getImagen());
-        } else {
-            lblImg.setText("Sin imagen");
+            //Imagen
+            JLabel lblImg =new JLabel();
+            lblImg.setAlignmentX(Component.CENTER_ALIGNMENT);
+            if (item.getImagen()!=null) {
+                lblImg.setIcon(item.getImagen());
+            } else {
+                lblImg.setText("Sin imagen");
+            }
+
+            //Nombre
+            JLabel lblNombre=new JLabel(item.getNombreItem());
+            lblNombre.setAlignmentX(Component.CENTER_ALIGNMENT);
+            lblNombre.setForeground(txt);
+            lblNombre.setFont(new Font("Calibri", Font.BOLD, 13));
+
+            //Precio
+            JLabel lblPrecio=new JLabel("Precio: " + item.getPrecioRenta() + " Lps");
+            lblPrecio.setAlignmentX(Component.CENTER_ALIGNMENT);
+            lblPrecio.setForeground(txt);
+
+            //estreno o no
+            if (item instanceof Movie) {
+                Movie mo = (Movie) item;
+                JLabel lblEstado=new JLabel("Estado: "+ mo.getEstado());
+                lblEstado.setAlignmentX(Component.CENTER_ALIGNMENT);
+                lblEstado.setForeground(txt);
+                tarjeta.add(lblEstado);
+            }
+
+            //Tipo
+            JLabel lblTipo=new JLabel(item instanceof Movie ? "Movie" : "Game");
+            lblTipo.setAlignmentX(Component.CENTER_ALIGNMENT);
+            lblTipo.setForeground(txt);
+
+            tarjeta.add(lblImg);
+            tarjeta.add(lblNombre);
+            tarjeta.add(lblPrecio);
+            tarjeta.add(lblTipo);
+
+            panelItems.add(tarjeta);
         }
 
-        //Nombre
-        JLabel lblNombre=new JLabel(item.getNombreItem());
-        lblNombre.setAlignmentX(Component.CENTER_ALIGNMENT);
-        lblNombre.setForeground(txt);
-        lblNombre.setFont(new Font("Calibri", Font.BOLD, 13));
-
-        //Precio
-        JLabel lblPrecio=new JLabel("Precio: " + item.getPrecioRenta() + " Lps");
-        lblPrecio.setAlignmentX(Component.CENTER_ALIGNMENT);
-        lblPrecio.setForeground(txt);
-
-        //estreno o no
-        if (item instanceof Movie) {
-            Movie mo = (Movie) item;
-            JLabel lblEstado=new JLabel("Estado: "+ mo.getEstado());
-            lblEstado.setAlignmentX(Component.CENTER_ALIGNMENT);
-            lblEstado.setForeground(txt);
-            tarjeta.add(lblEstado);
+        // Si no hay items
+        if (items.isEmpty()) {
+            JLabel vacio = new JLabel("No hay items registrados");
+            vacio.setForeground(txt);
+            panelItems.add(vacio);
+        }
+        scroll.setViewportView(panelItems);
+        scroll.setVisible(true);
+        panelItems.repaint();
+        scroll.repaint();
+        this.setVisible(true);    
+            });
+            //add
+            add(btnBack);
+            add(titulo);
+            add(btnAddItem);
+            add(btnRentar);
+            add(btnSubMenu);
+            add(btnPrint);
+            this.setVisible(true);
+        }
+        void mostrarMenu(boolean t){
+            titulo.setVisible(t);
+            btnAddItem.setVisible(t);
+            btnRentar.setVisible(t);
+            btnSubMenu.setVisible(t);
+            btnPrint.setVisible(t);
+        }
+        boolean noExisteItem(String codigo){
+            for(RentItem item:items){
+                if(item.getCodigoUnico().equals(codigo))
+                    return false;
+            }
+            return true;
         }
 
-        //Tipo
-        JLabel lblTipo=new JLabel(item instanceof Movie ? "Movie" : "Game");
-        lblTipo.setAlignmentX(Component.CENTER_ALIGNMENT);
-        lblTipo.setForeground(txt);
-        
-        tarjeta.add(lblImg);
-        tarjeta.add(lblNombre);
-        tarjeta.add(lblPrecio);
-        tarjeta.add(lblTipo);
-
-        panelItems.add(tarjeta);
-    }
-
-    // Si no hay items
-    if (items.isEmpty()) {
-        JLabel vacio = new JLabel("No hay items registrados");
-        vacio.setForeground(txt);
-        panelItems.add(vacio);
-    }
-    scroll.setViewportView(panelItems);
-    scroll.setVisible(true);
-    panelItems.repaint();
-    scroll.repaint();
-    this.setVisible(true);    
-        });
-        //add
-        add(btnBack);
-        add(titulo);
-        add(btnAddItem);
-        add(btnRentar);
-        add(btnSubMenu);
-        add(btnPrint);
-        this.setVisible(true);
-    }
-    void mostrarMenu(boolean t){
-        titulo.setVisible(t);
-        btnAddItem.setVisible(t);
-        btnRentar.setVisible(t);
-        btnSubMenu.setVisible(t);
-        btnPrint.setVisible(t);
-    }
-    boolean noExisteItem(String codigo){
-        for(RentItem item:items){
-            if(item.getCodigoUnico().equals(codigo))
-                return false;
-        }
-        return true;
-    }
-    
     
 }
