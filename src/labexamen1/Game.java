@@ -12,7 +12,7 @@ public class Game extends RentItem implements MenuActions{
     private ImageIcon imagen; 
 
    
-    public Game(String codigoUnico, String nombreItem, String imagen){
+    public Game(String codigoUnico, String nombreItem){
         super(codigoUnico, nombreItem, 20.0); 
         this.fechaPublicacion = Calendar.getInstance(); 
         this.especificaciones = new ArrayList<String>();
